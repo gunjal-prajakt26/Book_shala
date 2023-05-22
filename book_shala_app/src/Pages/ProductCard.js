@@ -10,7 +10,6 @@ export function ProductCard({ product }) {
       originalPrice,
       isBestSeller,
       rating,
-      percentageOff,
     } = product;
   
     return (
@@ -20,20 +19,24 @@ export function ProductCard({ product }) {
           src={img}
           alt={name}
         />
+        <div className="card-content">
         <div className="card-details">
-        <h3 className="card-title-header" title={name}>
+        <div className="card-info">
+        <h4 className="card-title-header" title={name}>
                 {name}
-              </h3>
+              </h4>
               <p className="card-description">{author}</p>
+              </div>
               <div className="card-star">
                 <p>{rating}</p>
               </div>
-          <div className="price">
-            <p className="disc-price">₹{price}</p>
-            <p className="actual-price">₹{originalPrice}</p>
-            <p className="price-percentage">({percentageOff}% OFF)</p>
           </div>
-        <button>
+          <div className="price">
+            <p className="disc-price"><b>₹{price}</b></p>
+            <p className="actual-price"><b>₹{originalPrice}</b></p>
+            <p className="price-percentage">(% OFF)</p>
+          </div>
+        <button className="cart-btn">
          {"Add to Cart"}
         </button>
         </div>

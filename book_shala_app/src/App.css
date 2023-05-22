@@ -4,7 +4,14 @@
   flex-direction: column;
 }
 
-/* .footer-component {
-  align-self: flex-end;
-  margin: auto 200px;
-} */
+.app-body{
+  margin-top: 85px;
+}
+
+.header-component{
+  position: fixed;
+  top: 0;
+  width: 100%;
+  overflow: hidden;
+  z-index: 1;
+}

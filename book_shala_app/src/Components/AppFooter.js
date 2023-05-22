@@ -4,7 +4,7 @@ export function AppFooter() {
     return (
         <div className="app-footer">
         <div className="footer-description">
-          <h2>Book-Shala</h2>
+          <h3>Book-Shala</h3>
           <p className="app-description">
             Fill your house with stacks of books, in all the crannies and all the nooks.
           </p>

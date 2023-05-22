@@ -1,4 +1,5 @@
 import {Link} from "react-router-dom"
+import { AppFooter } from "./AppFooter";
 import "./Home.css";
 export function Home(){
     return (
@@ -16,6 +17,9 @@ export function Home(){
                 <button className="shop-now-btn">SHOP NOW</button>
               </Link>
               </div>
+              <div className="footer-component">
+      <AppFooter />
+      </div>
             </div>
     )
 }

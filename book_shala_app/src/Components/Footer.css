@@ -1,4 +1,6 @@
 .app-footer{
+    line-height: 5px;
+    font-size: 15px;
     background-color: black;
     color: white;
     display: flex;
@@ -6,9 +8,8 @@
 }
 
 .footer-description{
-    font-size: 15px;
     text-align: left;
-    padding: 10px 10px 20px 10px;
+    padding: 10px 10px 10px 10px;
 }
 
 .footer-links{

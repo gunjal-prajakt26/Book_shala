@@ -9,7 +9,10 @@ import { Products } from "./Pages/Products";
 function App() {
   return (
     <div className="App">
-      <Header className="header-component"/>
+    <div className="header-component">
+      <Header />
+      </div>
+      <div className="app-body">
       <Routes>
           <Route path="/" element={<Home/>}/>
           <Route path="/products" element={<Products/>}/>
@@ -17,7 +20,8 @@ function App() {
           <Route path="/whishList" element={<WhishList/>}/> */}
           <Route path="/mockman" element={<Mockman/>}/>
         </Routes>
-      <AppFooter className="footer-component"/>
+        </div>
+        
     </div>
   );
 }
