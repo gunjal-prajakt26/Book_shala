@@ -1,0 +1,28 @@
+
+.main-text{
+    color: white;
+    margin: 20px auto;
+}
+
+.main-text img{
+    width: 100%;
+    height: 90vh;
+    opacity: 10;
+    background: rgba(0,0,0,.5);
+}
+
+.content-text{
+    position: absolute;
+    top: 430px;
+    left: 250px;
+    line-height: 30px;
+    text-align: left;
+}
+
+.shop-now-btn{
+    padding: 7px;
+    border-radius: 7px;
+    font-size: 15px;
+    color: white;
+    background-color: #94a3b8;
+}

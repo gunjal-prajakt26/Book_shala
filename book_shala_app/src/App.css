@@ -1,0 +1,10 @@
+.App {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+/* .footer-component {
+  align-self: flex-end;
+  margin: auto 200px;
+} */

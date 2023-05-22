@@ -1,0 +1,28 @@
+.app-footer{
+    background-color: black;
+    color: white;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.footer-description{
+    font-size: 15px;
+    text-align: left;
+    padding: 10px 10px 20px 10px;
+}
+
+.footer-links{
+    align-self: flex-start;
+}
+.connect-logo{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+
+.connect-logo a{
+    text-decoration: none;
+    margin: auto 20px;
+    color: white;
+}
