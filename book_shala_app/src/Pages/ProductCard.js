@@ -22,13 +22,13 @@ export function ProductCard({ product }) {
         <div className="card-content">
         <div className="card-details">
         <div className="card-info">
-        <h4 className="card-title-header" title={name}>
+        <p className="card-title-header" title={name}>
                 {name}
-              </h4>
+              </p>
               <p className="card-description">{author}</p>
               </div>
               <div className="card-star">
-                <p>{rating}</p>
+                <p><i class="bi bi-star-fill"></i> {rating} </p>
               </div>
           </div>
           <div className="price">
@@ -40,6 +40,9 @@ export function ProductCard({ product }) {
          {"Add to Cart"}
         </button>
         </div>
+        
+        {isBestSeller? (<p className="best-seeler-banner">BestSeller</p>):""}
+        <p className="whishlist-icon"><i class="bi bi-heart-fill"></i></p>
       </div>
     );
   }

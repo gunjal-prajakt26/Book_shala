@@ -7,7 +7,7 @@ export function Home(){
            <img src="https://pustaka-react.netlify.app/static/media/home-img.839d5b46.jpg"/>
            <div className="content-text">
               <h4>
-                Welcome to <span className="title">Pustaka</span>,
+                Welcome to <span className="title">Boosk-Shala</span>,
               </h4>
               <div>
                 <h1 className="main-text-title">For All Your</h1>
