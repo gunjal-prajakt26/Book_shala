@@ -2,7 +2,6 @@
     
 }
 .product-cards {
-    border-left: 1px solid;
     display: flex;
     flex-wrap: wrap;
     margin-left: 260px;
@@ -11,7 +10,9 @@
 .product-filters{
    width: 260px;
   position: fixed;
-  /* overflow-x: hidden;    */
+  border-right: 1px solid;
+  margin-bottom: 0px;
+  height: 100vh;
 }
 
 .filter-header {

@@ -6,18 +6,21 @@ import { makeServer } from "./server";
 import { DataProvider, DataContext } from "./Context/DataContext";
 import { AuthProvider, AuthContext } from "./Context/AuthContext";
 import {BrowserRouter as Router} from "react-router-dom"
+import { FilterContext, FilterProvider } from "./Context/FilterContext";
 
 // Call make Server
 makeServer();
 
-export {DataContext, AuthContext}
+export {DataContext, AuthContext, FilterContext}
 
 ReactDOM.render(
   <React.StrictMode>
   <Router>
    <DataProvider>
   <AuthProvider>
+  <FilterProvider>
     <App />
+    </FilterProvider>
     </AuthProvider>
     </DataProvider>
     </Router>

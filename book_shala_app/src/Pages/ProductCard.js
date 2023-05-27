@@ -1,6 +1,10 @@
+import { useContext } from "react";
+import { DataContext } from "../Context/DataContext";
 import "./ProductCard.css"
+
 export function ProductCard({ product }) {
-    
+
+  const {items, setItems, addToCart, addToWishlist}= useContext(DataContext);
     const {
       _id: id,
       img,
@@ -11,14 +15,28 @@ export function ProductCard({ product }) {
       isBestSeller,
       rating,
     } = product;
+
+    const discount=Math.floor(((originalPrice-price)/ originalPrice)*100);
   
+    const addToCartHandler=()=>{
+      addToCart(product);
+      setItems({type:"ADD_TO_CART", payLoad:product});
+    }
+    
+    const addToWishlistHandler=()=>{
+      addToWishlist(product);
+      setItems({type:"ADD_TO_WHISHLIST", payLoad:product});
+    }
     return (
       <div key={id} className="card">
+      <div className="img-container">
         <img
           className="card-img"
           src={img}
           alt={name}
         />
+        <p className="whishlist-icon"><i class="bi bi-heart" onClick={()=>addToWishlistHandler()}></i></p>
+        </div>
         <div className="card-content">
         <div className="card-details">
         <div className="card-info">
@@ -34,15 +52,15 @@ export function ProductCard({ product }) {
           <div className="price">
             <p className="disc-price"><b>₹{price}</b></p>
             <p className="actual-price"><b>₹{originalPrice}</b></p>
-            <p className="price-percentage">(% OFF)</p>
+            <p className="price-percentage">({discount}% OFF)</p>
           </div>
-        <button className="cart-btn">
+        <button className="cart-btn" onClick={()=>addToCartHandler()}>
          {"Add to Cart"}
         </button>
         </div>
         
         {isBestSeller? (<p className="best-seeler-banner">BestSeller</p>):""}
-        <p className="whishlist-icon"><i class="bi bi-heart-fill"></i></p>
+        
       </div>
     );
   }

@@ -1,95 +1,94 @@
 import {createContext, useState, useEffect, useReducer} from "react";
+import axios from "axios";
+// import { initialData, DataReducerFun } from "../Reducer/DataReducerFunction";
 
 export const DataContext = createContext();
+
+const DataReducerFun=(state,{type,payLoad})=>{
+    switch (type) {
+        case "SET_PRODUCT_DATA":
+                return {...state, productData:payLoad, data:payLoad };
+            break;
+        case "SET_CATEGORIES_DATA":
+            return {...state, categories:payLoad};
+            break;
+
+        case "ADD_TO_CART":
+            return {
+                ...state,
+                cart: [...state.cart,payLoad],
+              }
+            break;
+        case "ADD_TO_WHISHLIST":
+            return {
+                ...state,
+                wishlist: [...state.wishlist,payLoad],
+              }
+            break;
+        default:
+            return state;
+            break;
+    }
+}
 
 
 export function DataProvider({children}){
 
-    const [data, setData]= useState([]);
-    const [cartData, setCartData]= useState([]);
-    const [categories, setCategories]= useState([]);
     const [isLoad, setIsLoad]= useState(true);
     const [isError, setIsError]= useState(false);
     const token= localStorage.getItem("encodedToken");
+    const initialData = {productData:[],categories:[], cart:[], wishlist:[]}; 
 
-    const getData=async ()=>{
-        try {
-            const response= await fetch("/api/products");
-            if(response.status===200){
-                const list=await response.json();
-                setData(list.products);
-                setIsLoad(false)
-            }
-        } catch (error) {
-            setIsLoad(false);
-            console.error(error)
-            setIsError(true);
-        }
-    }
+    const [items, setItems] = useReducer(DataReducerFun, initialData);
 
-    const getCategories=async()=> {
-        const response = await fetch("/api/categories", {
-            method:"GET"
-        });
-            const catgoryList = await response.json();
-            setCategories(catgoryList.categories);
-    }
-
-
-    const getCartData=async()=> {
-        
-        const response = await fetch("/api/user/cart",{
-            method: "GET",
-            headers: {authorization : token}
-        });
-        const jsonData = await response.json();
-        setCartData(jsonData.cart);
-    }
-
-    const products =
-        {
-          _id: 45,
-          img: "https://rukminim1.flixcart.com/image/612/612/kwxv98w0/book/l/z/y/do-epic-shit-original-imag9gcfcwfvwtep.jpeg?q=70",
-          name: "Do Epic Shit",
-          author: "Ankur Warikoo",
-          price: 219,
-          originalPrice: 399,
-          isBestSeller: true,
-          category: "Self Help",
-          rating: 4.6,
-        };
-    const postCartData=async(item)=> {
-        const response = await fetch("/api/user/cart",{
-            method: "POST",
-            headers: {authorization : token,"Content-Type": "application/json"},
-            body:JSON.stringify({product:item})
-        });
-        const data=await response.json()
-        console.log(data);
+    const addToCart= async ( productItem)=>{
+        const responce= await fetch("/api/user/cart",{
+            method:"POST",
+            headers:{authorization: token},
+            body:JSON.stringify({product:{productItem}}
+            )
+        })
+            .then(res=>res.json())
+            .then(json=>console.log(json))
     }
     
-    // const deletteCartData=async(item, id)=> {
-    //     const response = await fetch("/api/user/cart",{
-    //         method: "POST",
-    //         headers: {authorization : token,"Content-Type": "application/json"},
-    //         body:JSON.stringify({product:item})
-    //     });
-    //     const data=await response.json()
-    //     console.log(data);
-    // }
+    const addToWishlist= async ( productItem)=>{
+        const responce= await fetch("/api/user/wishlist",{
+            method:"POST",
+            headers:{authorization: token},
+            body:JSON.stringify({product:{productItem}}
+            )
+        })
+            .then(res=>res.json())
+            .then(json=>console.log(json))
+    }
+    
     
     useEffect(() => {
-      getData();
-      getCategories();
-      postCartData(products);
-      getCartData();
+        (async () => {
+            try {
+              const dataResponse= await fetch("/api/products");
+                  const list=await dataResponse.json();
+                  setItems({type:"SET_PRODUCT_DATA", payLoad:list.products})
+              
+              const categoryResponse= await fetch("/api/categories", {method:"GET"});
+                  const catgoryList = await categoryResponse.json();
+                  setItems({type:"SET_CATEGORIES_DATA", payLoad:catgoryList.categories})
+        
+              setIsLoad(false);
+
+            } catch (error) {
+                setIsLoad(false);
+                console.error(error)
+                setIsError(true);
+            }
+          })();
     }, [])
     
-
-
+    console.log(items.wishlist)
     return (
         <>
-            <DataContext.Provider value={{data, isError, isLoad, cartData, categories}}>
+            <DataContext.Provider value={{items, setItems, isError, isLoad, addToCart, addToWishlist}}>
                 {children}
             </DataContext.Provider>
         </>
