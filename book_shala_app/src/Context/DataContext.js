@@ -19,6 +19,19 @@ const DataReducerFun=(state,{type,payLoad})=>{
                 cart: [...state.cart,payLoad],
               }
             break;
+
+        case "REMOVE_FROM_CART":
+            return {
+                ...state, cart: state.cart.filter(({_id})=>_id!=payLoad)
+            }
+            break;
+        
+        case "REMOVE_FROM_WHISHLIST":
+            return {
+                ...state, wishlist: state.wishlist.filter(({_id})=>_id!=payLoad)
+            }
+            break;
+
         case "ADD_TO_WHISHLIST":
             return {
                 ...state,
@@ -37,7 +50,17 @@ export function DataProvider({children}){
     const [isLoad, setIsLoad]= useState(true);
     const [isError, setIsError]= useState(false);
     const token= localStorage.getItem("encodedToken");
-    const initialData = {productData:[],categories:[], cart:[], wishlist:[]}; 
+    const initialData = {productData:[],categories:[], cart:[], wishlist:[{
+        _id: 1,
+        img: "https://rukminim1.flixcart.com/image/612/612/kgwld3k0/book/1/9/4/rich-dad-poor-dad-original-imafxf885pytvycy.jpeg?q=70",
+        name: "Rich Dad Poor Dad",
+        author: "Robert Kiyoski",
+        price: 350,
+        originalPrice: 500,
+        isBestSeller: false,
+        category: "Non Fiction",
+        rating: 2,
+      }]}; 
 
     const [items, setItems] = useReducer(DataReducerFun, initialData);
 
@@ -48,8 +71,16 @@ export function DataProvider({children}){
             body:JSON.stringify({product:{productItem}}
             )
         })
-            .then(res=>res.json())
-            .then(json=>console.log(json))
+      setItems({type:"ADD_TO_CART", payLoad:productItem});
+    }
+
+    const removeFromCart= async (productId)=>{
+        const responce= await fetch(`/api/user/cart/:${productId}`,{
+            method:"DELETE",
+            headers:{authorization: token}
+        })
+            
+        setItems({type:"REMOVE_FROM_CART", payLoad:productId})    
     }
     
     const addToWishlist= async ( productItem)=>{
@@ -59,8 +90,15 @@ export function DataProvider({children}){
             body:JSON.stringify({product:{productItem}}
             )
         })
-            .then(res=>res.json())
-            .then(json=>console.log(json))
+      setItems({type:"ADD_TO_WHISHLIST", payLoad:productItem});
+    }
+    
+    const removeFromWishlist= async (productId)=>{
+        const responce= await fetch(`/api/user/wishlist/:${productId}`,{
+            method:"DELETE",
+            headers:{authorization: token}
+        })
+        setItems({type:"REMOVE_FROM_WHISHLIST", payLoad:productId})
     }
     
     
@@ -85,10 +123,9 @@ export function DataProvider({children}){
           })();
     }, [])
     
-    console.log(items.wishlist)
     return (
         <>
-            <DataContext.Provider value={{items, setItems, isError, isLoad, addToCart, addToWishlist}}>
+            <DataContext.Provider value={{items, setItems, isError, isLoad, addToCart, addToWishlist, removeFromCart, removeFromWishlist}}>
                 {children}
             </DataContext.Provider>
         </>

@@ -87,3 +87,13 @@
 .img-container{
     display: flex;
 }
+
+.link{
+    color: white;
+    text-decoration: none;
+}
+
+.price-percentage {
+    font-weight: bold;
+    color: green;
+}

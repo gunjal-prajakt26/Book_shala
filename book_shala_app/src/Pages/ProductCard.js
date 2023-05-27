@@ -1,10 +1,13 @@
 import { useContext } from "react";
 import { DataContext } from "../Context/DataContext";
+import { useNavigate } from "react-router";
 import "./ProductCard.css"
 
 export function ProductCard({ product }) {
 
-  const {items, setItems, addToCart, addToWishlist}= useContext(DataContext);
+  const {items:{cart, wishlist}, setItems, addToCart, addToWishlist,removeFromCart, removeFromWishlist}= useContext(DataContext);
+
+  const navigate= useNavigate();
     const {
       _id: id,
       img,
@@ -18,14 +21,18 @@ export function ProductCard({ product }) {
 
     const discount=Math.floor(((originalPrice-price)/ originalPrice)*100);
   
+    const isInCart=cart.includes(product);
     const addToCartHandler=()=>{
-      addToCart(product);
-      setItems({type:"ADD_TO_CART", payLoad:product});
+      isInCart
+      ?navigate("/cart")
+      :addToCart(product);
     }
     
+    const isInWishlist= wishlist.find(({_id})=>_id == id);
     const addToWishlistHandler=()=>{
-      addToWishlist(product);
-      setItems({type:"ADD_TO_WHISHLIST", payLoad:product});
+      isInWishlist
+      ?removeFromWishlist(id)
+      :addToWishlist(product);
     }
     return (
       <div key={id} className="card">
@@ -35,7 +42,7 @@ export function ProductCard({ product }) {
           src={img}
           alt={name}
         />
-        <p className="whishlist-icon"><i class="bi bi-heart" onClick={()=>addToWishlistHandler()}></i></p>
+        <p className="whishlist-icon"><i class="bi bi-suit-heart-fill" style={{color:isInWishlist?"red":"gray"}} onClick={()=>addToWishlistHandler()}></i></p>
         </div>
         <div className="card-content">
         <div className="card-details">
@@ -54,9 +61,7 @@ export function ProductCard({ product }) {
             <p className="actual-price"><b>₹{originalPrice}</b></p>
             <p className="price-percentage">({discount}% OFF)</p>
           </div>
-        <button className="cart-btn" onClick={()=>addToCartHandler()}>
-         {"Add to Cart"}
-        </button>
+        <button className="cart-btn" onClick={()=>addToCartHandler()}>{isInCart?"Go to Cart":"Add to Cart"}</button>
         </div>
         
         {isBestSeller? (<p className="best-seeler-banner">BestSeller</p>):""}

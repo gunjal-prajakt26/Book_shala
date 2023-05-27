@@ -1,5 +1,5 @@
 import "./Header.css";
-import {Link} from "react-router-dom"
+import {Link} from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { FilterContext } from "../Context/FilterContext";
@@ -18,7 +18,7 @@ export function Header() {
             </div>
             <div className="app-features">
             <p><Link className="link" to="/cart"><i class="bi bi-cart-check-fill"></i></Link></p>
-            <p><Link className="link" to="/whishList"><i class="bi bi-heart-fill"></i></Link></p>
+            <p><Link className="link" to="/wishList"><i class="bi bi-heart-fill"></i></Link></p>
             <p><Link className="link" to="/profilePage"><i class="bi bi-person-circle"></i></Link></p>
             </div>
         </div>

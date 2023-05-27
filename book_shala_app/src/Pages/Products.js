@@ -61,14 +61,14 @@ export function Products() {
         <button onClick={()=>setFilters({type:"CLEAR_FILTERS"})}>Clear</button>
         </div>
         <div className="price-slider">
-            <label for="price">Price : ₹ {rangeInput}</label><br/>
+            <label>Price : ₹ {rangeInput}</label><br/>
             <input type="range" id="price" name="price" min="50" max="699" value={filters.rangeOfPrice} onChange={(e)=>onRangeChange(e.target.value)}/>
         </div>
         <div className="category-filter">
         <p className="category-label">Category</p>
         <div className="categories">
         {categories?.map(({categoryName})=>(
-            <li>
+            <li key={categoryName}>
             <input
             type="checkbox"
             value={categoryName}

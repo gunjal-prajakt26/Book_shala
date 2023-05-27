@@ -1,12 +1,11 @@
 import "./App.css";
 import Mockman from 'mockman-js';
-import { AppFooter } from "./Components/AppFooter";
 import { Header } from "./Components/Header";
 import {Routes, Route} from "react-router-dom";
 import {Home} from "./Components/Home";
 import { Products } from "./Pages/Products";
-import { Cart } from "./Pages/Cart";
-import { WhishList } from "./Pages/WhishList";
+import { Cart } from "./Pages/Cart/Cart";
+import { WishList } from "./Pages/Wishlist/WishList";
 import { ProfilePage } from "./Pages/ProfilePage";
 
 function App() {
@@ -20,7 +19,7 @@ function App() {
           <Route path="/" element={<Home/>}/>
           <Route path="/products" element={<Products/>}/>
           <Route path="/cart" element={<Cart/>}/>
-          <Route path="/whishList" element={<WhishList/>}/>
+          <Route path="/wishList" element={<WishList/>}/>
           <Route path="/profilePage" element={<ProfilePage/>}/>
           <Route path="/mockman" element={<Mockman/>}/>
         </Routes>
