@@ -30,12 +30,6 @@ export function WishlistCard({product}){
         :addToCart(product);
       }
       
-      const isInWishlist= wishlist.find(({_id})=>_id == id);
-      const addToWishlistHandler=()=>{
-        isInWishlist
-        ?removeFromWishlist(id)
-        :addToWishlist(product);
-      }
       return (
         <div key={id} className="wishlist-product-card">
         <div className="wishlist-card">
@@ -61,8 +55,8 @@ export function WishlistCard({product}){
           </div>
           </div>
           <div className="wishlist-card-btns">
-            <button>Remove</button>
-            <button>Move To Wishlist</button>
+            <button onClick={()=>removeFromWishlist(id)}>Remove</button><br/>
+            <button onClick={()=>addToCartHandler()}>{isInCart?"Go to Cart":"Move To Cart"}</button>
           </div>
           </div>
           </div>

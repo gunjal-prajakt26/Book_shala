@@ -51,7 +51,7 @@
  .card-btns span {
     margin: auto 30px;
     font-weight: bold;
-
+    cursor: pointer;
  }
 
  .cart-qnty {

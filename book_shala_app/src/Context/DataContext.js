@@ -65,13 +65,22 @@ export function DataProvider({children}){
     const [items, setItems] = useReducer(DataReducerFun, initialData);
 
     const addToCart= async ( productItem)=>{
-        const responce= await fetch("/api/user/cart",{
-            method:"POST",
-            headers:{authorization: token},
-            body:JSON.stringify({product:{productItem}}
-            )
-        })
-      setItems({type:"ADD_TO_CART", payLoad:productItem});
+        const {
+            data: { cart },
+          } = await axios.post(
+            "/api/user/cart",
+            {
+              productItem,
+            },
+            {
+              headers: {
+                authorization: token,
+              },
+            }
+          );
+        // const response=await data.json();
+        console.log(cart);
+      setItems({type:"ADD_TO_CART", payLoad:cart});
     }
 
     const removeFromCart= async (productId)=>{

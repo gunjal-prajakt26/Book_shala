@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
-import { DataContext } from "../Context/DataContext";
-import { FilterContext } from "../Context/FilterContext";
+import { DataContext } from "../../Context/DataContext";
+import { FilterContext } from "../../Context/FilterContext";
 import { ProductCard } from "./ProductCard";
 import "./Products.css";
 
@@ -113,9 +113,11 @@ export function Products() {
     <div className="product-cards">
         {isError? <h1>Error</h1>
       :isLoad?<h1>Loading</h1>
-      :filteredData.map((obj)=>(
+      :filteredData.length > 0
+      ?filteredData.map((obj)=>(
         <ProductCard key={obj._id} product={obj} />
       ))
+      :(<p className="emty-msg">"Sorry , Products are not available for chosen category."</p>)
       }
     </div>
     </div>

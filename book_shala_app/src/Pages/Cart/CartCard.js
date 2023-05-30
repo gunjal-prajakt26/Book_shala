@@ -5,7 +5,7 @@ import "./CartCard.css";
 
 export function CartCard({product}){
 
-    const {items:{cart, wishlist}, setItems, addToCart, addToWishlist,removeFromCart, removeFromWishlist}= useContext(DataContext);
+    const {items:{cart, wishlist},  addToWishlist,removeFromCart}= useContext(DataContext);
 
   const navigate= useNavigate();
 
@@ -16,23 +16,14 @@ export function CartCard({product}){
         author,
         price,
         originalPrice,
-        isBestSeller,
-        rating,
       } = product;
   
       const discount=Math.floor(((originalPrice-price)/ originalPrice)*100);
-    
-      const isInCart=cart.includes(product);
-      const addToCartHandler=()=>{
-        isInCart
-        ?navigate("/cart")
-        :addToCart(product);
-      }
       
       const isInWishlist= wishlist.find(({_id})=>_id == id);
-      const addToWishlistHandler=()=>{
+      const clickHandler=()=>{
         isInWishlist
-        ?removeFromWishlist(id)
+        ?navigate("/wishList")
         :addToWishlist(product);
       }
       return (
@@ -65,8 +56,8 @@ export function CartCard({product}){
           </div>
           </div>
           <div className="card-btns">
-            <span>Remove</span>
-            <span>Move To Wishlist</span>
+            <span onClick={()=>removeFromCart(id)}>Remove</span>
+            <span onClick={()=>clickHandler()}>{isInWishlist?"Go to Wishlist":"Move To Wishlist"}</span>
           </div>
         </div>
       );
