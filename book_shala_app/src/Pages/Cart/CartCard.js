@@ -5,7 +5,7 @@ import "./CartCard.css";
 
 export function CartCard({product}){
 
-    const {items:{cart, wishlist},  addToWishlist,removeFromCart}= useContext(DataContext);
+    const {items:{wishlist},  addToWishlist,removeFromCart,updateQuantityofCart}= useContext(DataContext);
 
   const navigate= useNavigate();
 
@@ -16,6 +16,7 @@ export function CartCard({product}){
         author,
         price,
         originalPrice,
+
       } = product;
   
       const discount=Math.floor(((originalPrice-price)/ originalPrice)*100);
@@ -25,6 +26,12 @@ export function CartCard({product}){
         isInWishlist
         ?navigate("/wishList")
         :addToWishlist(product);
+      }
+
+      const minusClickHandler=()=>{
+        product.qty > 1 
+        ?updateQuantityofCart(id, "DEC_QTY")
+        :removeFromCart(id); 
       }
       return (
         <div key={id} className="cart-product-card">
@@ -49,14 +56,14 @@ export function CartCard({product}){
             <p className="price-percentage">({discount}% OFF)</p>
           </div>
           <div className="cart-qnty">
-          <span className="qnty-btns"><i class="bi bi-dash-circle"></i></span>
-          <span className="count"> a </span>
-          <span className="qnty-btns"><i class="bi bi-plus-circle"></i></span>
+          <span className="qnty-btns" onClick={()=>minusClickHandler()}><i class="bi bi-dash-circle"></i></span>
+          <span className="count">{product.qty}</span>
+          <span className="qnty-btns" onClick={()=>updateQuantityofCart(id, "INC_QTY")}><i class="bi bi-plus-circle"></i></span>
           </div>
           </div>
           </div>
           <div className="card-btns">
-            <span onClick={()=>removeFromCart(id)}>Remove</span>
+            <span onClick={()=>removeFromCart(product._id)}>Remove</span>
             <span onClick={()=>clickHandler()}>{isInWishlist?"Go to Wishlist":"Move To Wishlist"}</span>
           </div>
         </div>

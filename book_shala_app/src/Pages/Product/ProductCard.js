@@ -5,7 +5,7 @@ import "./ProductCard.css"
 
 export function ProductCard({ product }) {
 
-  const {items:{cart, wishlist}, setItems, addToCart, addToWishlist,removeFromCart, removeFromWishlist}= useContext(DataContext);
+  const {items:{cart, wishlist}, addToCart, addToWishlist, removeFromWishlist}= useContext(DataContext);
 
   const navigate= useNavigate();
     const {
@@ -21,7 +21,7 @@ export function ProductCard({ product }) {
 
     const discount=Math.floor(((originalPrice-price)/ originalPrice)*100);
   
-    const isInCart=cart.includes(product);
+    const isInCart=cart.find(({_id})=>_id == id);
     const addToCartHandler=()=>{
       isInCart
       ?navigate("/cart")

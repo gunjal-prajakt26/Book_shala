@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router";
 import { DataContext } from "../../Context/DataContext";
 
 export function ProductDetails() {
-    const {items:{productData,cart, wishlist}, setItems, addToCart, addToWishlist,removeFromCart, removeFromWishlist}= useContext(DataContext);
+    const {items:{productData,cart, wishlist}, addToCart, addToWishlist}= useContext(DataContext);
   
     
     const { productId } = useParams();
@@ -14,15 +14,14 @@ export function ProductDetails() {
         return product.id === productId;
     });
 
-    const isInCart=cart.includes(product);
+    const isInCart=cart.find(({_id})=>_id == product?._id);
     const addToCartHandler=()=>{
       isInCart
       ?navigate("/cart")
       :addToCart(product);
     }
     
-    const isInWishlist= wishlist.includes(product);
-    console.log(isInWishlist);
+    const isInWishlist= wishlist.find(({_id})=>_id == product?._id);
     const addToWishlistHandler=()=>{
       isInWishlist
       ?navigate("/wishList")

@@ -29,3 +29,39 @@
 .footer-component {
    margin-top: 15px;
   }
+
+
+  .category-container,
+  .category-heading .paragraph-md,
+  .category-row {
+      margin: 2rem 4rem;
+}
+
+.box,
+.category-row {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    gap: 1rem
+}
+
+.detail-box p {
+    margin-top: 1rem
+}
+
+.box {
+    background-color: var(--lynxWhite);
+    border-radius: 50%;
+    flex-wrap: wrap;
+    height: 11.875rem;
+    width: 11.875rem;
+    padding: 1rem 1rem 1rem 1rem;
+    transition: transform .2s ease, -webkit-transform .2s ease;
+    cursor: pointer;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.box:hover {
+    transform: scale(1.03);
+   
+}

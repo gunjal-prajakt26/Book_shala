@@ -4,7 +4,8 @@ import axios from "axios";
 
 export const DataContext = createContext();
 
-const DataReducerFun=(state,{type,payLoad})=>{
+const DataReducerFun=(state,action)=>{
+    const {type,payLoad}= action;
     switch (type) {
         case "SET_PRODUCT_DATA":
                 return {...state, productData:payLoad, data:payLoad };
@@ -16,26 +17,30 @@ const DataReducerFun=(state,{type,payLoad})=>{
         case "ADD_TO_CART":
             return {
                 ...state,
-                cart: [...state.cart,payLoad],
+                cart: payLoad
               }
             break;
 
         case "REMOVE_FROM_CART":
             return {
-                ...state, cart: state.cart.filter(({_id})=>_id!=payLoad)
+                ...state, cart:payLoad
             }
+            break;
+        
+        case "UPDATE_CART_QUANTITY":
+            return {...state, cart:payLoad};
             break;
         
         case "REMOVE_FROM_WHISHLIST":
             return {
-                ...state, wishlist: state.wishlist.filter(({_id})=>_id!=payLoad)
+                ...state, wishlist:payLoad
             }
             break;
 
         case "ADD_TO_WHISHLIST":
             return {
                 ...state,
-                wishlist: [...state.wishlist,payLoad],
+                wishlist:payLoad
               }
             break;
         default:
@@ -50,27 +55,27 @@ export function DataProvider({children}){
     const [isLoad, setIsLoad]= useState(true);
     const [isError, setIsError]= useState(false);
     const token= localStorage.getItem("encodedToken");
-    const initialData = {productData:[],categories:[], cart:[], wishlist:[{
-        _id: 1,
-        img: "https://rukminim1.flixcart.com/image/612/612/kgwld3k0/book/1/9/4/rich-dad-poor-dad-original-imafxf885pytvycy.jpeg?q=70",
-        name: "Rich Dad Poor Dad",
-        author: "Robert Kiyoski",
-        price: 350,
-        originalPrice: 500,
-        isBestSeller: false,
-        category: "Non Fiction",
-        rating: 2,
-      }]}; 
+    const initialData = {productData:[],categories:[], cart:[{
+      _id: 45,
+      img: "https://rukminim1.flixcart.com/image/612/612/kgwld3k0/book/1/9/4/rich-dad-poor-dad-original-imafxf885pytvycy.jpeg?q=70",
+      name: "Rich Dad Poor Dad",
+      author: "Robert Kiyoski",
+      price: 350,
+      originalPrice: 500,
+      isBestSeller: false,
+      category: "Non Fiction",
+      rating: 2,
+    },], wishlist:[]}; 
 
     const [items, setItems] = useReducer(DataReducerFun, initialData);
 
-    const addToCart= async ( productItem)=>{
+    const addToCart= async ( product)=>{
         const {
             data: { cart },
           } = await axios.post(
             "/api/user/cart",
             {
-              productItem,
+              product,
             },
             {
               headers: {
@@ -78,36 +83,83 @@ export function DataProvider({children}){
               },
             }
           );
-        // const response=await data.json();
-        console.log(cart);
-      setItems({type:"ADD_TO_CART", payLoad:cart});
+          setItems({type:"ADD_TO_CART", payLoad:cart});
+        }
+        
+        const removeFromCart= async (id)=>{
+            try {
+                const {
+                    data: { cart },
+                } = await axios.delete(`api/user/cart/${id}`, {
+                    headers: {
+                        authorization: token,
+                    },
+                });
+            
+        setItems({type:"REMOVE_FROM_CART", payLoad:cart})    
+    } catch (error) {
+        console.log("Error in service", error);
+      }
     }
 
-    const removeFromCart= async (productId)=>{
-        const responce= await fetch(`/api/user/cart/:${productId}`,{
-            method:"DELETE",
-            headers:{authorization: token}
-        })
-            
-        setItems({type:"REMOVE_FROM_CART", payLoad:productId})    
+    const updateQuantityofCart=async (id,actionType)=>{
+        try {
+            const {
+              data: { cart },
+            } = await axios.post(
+              `api/user/cart/${id}`,
+              {
+                action: {
+                  type: actionType === "INC_QTY" ? "increment" : "decrement",
+                },
+              },
+              {
+                headers: {
+                  authorization: token,
+                },
+              }
+            );
+        
+            setItems({type:"UPDATE_CART_QUANTITY", payLoad:cart})
+          } catch (error) {
+            console.log("Error in updateQtyFromCart service", error);
+          }
     }
     
-    const addToWishlist= async ( productItem)=>{
-        const responce= await fetch("/api/user/wishlist",{
-            method:"POST",
-            headers:{authorization: token},
-            body:JSON.stringify({product:{productItem}}
-            )
-        })
-      setItems({type:"ADD_TO_WHISHLIST", payLoad:productItem});
+    const addToWishlist= async ( product)=>{
+        try {
+            const {
+              data: { wishlist },
+            } = await axios.post(
+              "/api/user/wishlist",
+              {
+                product,
+              },
+              {
+                headers: {
+                  authorization: token,
+                },
+              }
+            );
+            setItems({type:"ADD_TO_WHISHLIST", payLoad:wishlist});
+          } catch (error) {
+            console.log("Error in Add To Wishlist Service", error);
+          }
     }
     
-    const removeFromWishlist= async (productId)=>{
-        const responce= await fetch(`/api/user/wishlist/:${productId}`,{
-            method:"DELETE",
-            headers:{authorization: token}
+    const removeFromWishlist= async (id)=>{
+        try {
+            const {
+                data: { wishlist },
+              } = await axios.delete(`api/user/wishlist/${id}`, {
+                headers: {
+                  authorization: token,
+                },
         })
-        setItems({type:"REMOVE_FROM_WHISHLIST", payLoad:productId})
+        setItems({type:"REMOVE_FROM_WHISHLIST", payLoad:wishlist})
+    } catch (error) {
+        console.log("Error in Remove From Wishlist Service", error);
+      }
     }
     
     
@@ -131,10 +183,11 @@ export function DataProvider({children}){
             }
           })();
     }, [])
+
     
     return (
         <>
-            <DataContext.Provider value={{items, setItems, isError, isLoad, addToCart, addToWishlist, removeFromCart, removeFromWishlist}}>
+            <DataContext.Provider value={{items, setItems, isError, isLoad, addToCart, addToWishlist, removeFromCart, removeFromWishlist, updateQuantityofCart}}>
                 {children}
             </DataContext.Provider>
         </>
