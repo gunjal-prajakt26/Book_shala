@@ -12,8 +12,9 @@ export function Home(){
   const {filters, setFilters}= useContext(FilterContext);
 
   const clickHandler=(category)=>{
+    console.log(category);
     setFilters({type:"ADD_CATEGORY", payLoad:category});
-    navigate("/products")
+    navigate("/products");
   }
 
     return (
@@ -44,7 +45,7 @@ export function Home(){
               {categories &&
                 categories.map(({ _id, categoryName, description }) => {
                   return (
-                    <div className="box" key={_id} onClick={(categoryName)=>clickHandler(categoryName)}>
+                    <div className="box" key={_id} onClick={()=>clickHandler(categoryName)}>
                       <div className="detail-box">
                         <h4>{categoryName}</h4>
                         <p className="paragraph-sm">{description}</p>

@@ -10,10 +10,24 @@ import { ProfilePage } from "./Pages/Product/ProfilePage";
 import { ProductDetails } from "./Pages/Product/ProductDetails";
 import { Login } from "./Pages/LogIn/LogIn";
 import { Signup } from "./Pages/LogIn/SignUp";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
     <div className="App">
+    <ToastContainer
+        position='top-right'
+        autoClose={500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme='light'
+      />
     <div className="header-component">
       <Header />
       </div>
@@ -30,7 +44,6 @@ function App() {
           <Route path="/mockman" element={<Mockman/>}/>
         </Routes>
         </div>
-        
     </div>
   );
 }

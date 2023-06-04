@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { DataContext } from "../../Context/DataContext";
 import { useNavigate } from "react-router";
 import "./ProductCard.css"
+import { toast } from "react-toastify";
 
 export function ProductCard({ product }) {
 

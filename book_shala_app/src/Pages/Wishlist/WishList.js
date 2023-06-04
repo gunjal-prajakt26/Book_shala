@@ -3,10 +3,13 @@ import { DataContext } from "../../Context/DataContext"
 import { WishlistCard } from "./WishlistCard";
 
 export function WishList(){
-    const {items:{cart, wishlist}}= useContext(DataContext);
+    const {items:{wishlist}}= useContext(DataContext);
     return (
         <div>
-            <h1>WishList Page</h1>
+            <h1>WishList Page {wishlist.length > 0
+            ?<span className="product-count">({wishlist.length} Products)</span>
+            :""
+            }</h1>
             <div className="cards">
             {
             wishlist.length > 0

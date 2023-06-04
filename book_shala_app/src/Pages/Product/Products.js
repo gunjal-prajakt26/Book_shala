@@ -54,7 +54,7 @@ export function Products() {
 
   const filteredData=productItems(filters);
   return (
-    <div className="Product-page">
+    <div className="product-page">
     <div className="product-filters">
         <div className="filter-header">
         <h3>Filters</h3>
@@ -64,9 +64,9 @@ export function Products() {
             <label>Price : ₹ {rangeInput}</label><br/>
             <input type="range" id="price" name="price" min="50" max="699" value={filters.rangeOfPrice} onChange={(e)=>onRangeChange(e.target.value)}/>
         </div>
-        <div className="category-filter">
-        <p className="category-label">Category</p>
-        <div className="categories">
+        <div className="product-category-filter">
+        <p className="product-category-label">Category</p>
+        <div className="product-categories">
         {categories?.map(({categoryName})=>(
             <li key={categoryName}>
             <input
@@ -110,16 +110,22 @@ export function Products() {
         </div>
         </div>
     </div>
-    <div className="product-cards">
+    <div className="list">
+          {filteredData.length > 0
+        ?<h3 className="page-title">Showing All Products <span className="product-count">({filteredData.length} Products)</span></h3>
+        :""
+          }
         {isError? <h1>Error</h1>
       :isLoad?<h1>Loading</h1>
       :filteredData.length > 0
-      ?filteredData.map((obj)=>(
+      ?<div className="product-cards">
+        {filteredData.map((obj)=>(
         <ProductCard key={obj._id} product={obj} />
-      ))
+      ))}
+        </div>
       :(<p className="emty-msg">"Sorry , Products are not available for chosen category."</p>)
       }
-    </div>
+        </div>
     </div>
   );
 }

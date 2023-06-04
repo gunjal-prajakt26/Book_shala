@@ -11,7 +11,7 @@ export function Login() {
     <div className="auth-container">
       <div className="auth-main-container">
         <div className="auth-title">
-          <h2 className="page-title">Sign In</h2>
+          <h2 className="">Sign In</h2>
         </div>
         <form className="auth-main">
           <div className="auth-email">

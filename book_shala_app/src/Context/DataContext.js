@@ -1,5 +1,6 @@
 import {createContext, useState, useEffect, useReducer} from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 // import { initialData, DataReducerFun } from "../Reducer/DataReducerFunction";
 
 export const DataContext = createContext();
@@ -70,7 +71,8 @@ export function DataProvider({children}){
     const [items, setItems] = useReducer(DataReducerFun, initialData);
 
     const addToCart= async ( product)=>{
-        const {
+        try {
+          const {
             data: { cart },
           } = await axios.post(
             "/api/user/cart",
@@ -84,7 +86,12 @@ export function DataProvider({children}){
             }
           );
           setItems({type:"ADD_TO_CART", payLoad:cart});
+          toast.success("Added In Cart !");
+        }catch (error) {
+          toast.error("Something Went Wrong !");
+          console.log("Error in addToCart service", error);
         }
+      }
         
         const removeFromCart= async (id)=>{
             try {
@@ -94,10 +101,11 @@ export function DataProvider({children}){
                     headers: {
                         authorization: token,
                     },
-                });
-            
+                }); 
         setItems({type:"REMOVE_FROM_CART", payLoad:cart})    
-    } catch (error) {
+        toast.error("Removed From Cart !");
+      } catch (error) {
+        toast.error("Something Went Wrong !");
         console.log("Error in service", error);
       }
     }
@@ -142,7 +150,9 @@ export function DataProvider({children}){
               }
             );
             setItems({type:"ADD_TO_WHISHLIST", payLoad:wishlist});
+            toast.success("Added In Wishlist !");
           } catch (error) {
+            toast.error("Something Went Wrong !");
             console.log("Error in Add To Wishlist Service", error);
           }
     }
@@ -157,7 +167,9 @@ export function DataProvider({children}){
                 },
         })
         setItems({type:"REMOVE_FROM_WHISHLIST", payLoad:wishlist})
-    } catch (error) {
+        toast.error("Removed From Wishlist  !");
+      } catch (error) {
+        toast.error("Something Went Wrong !");
         console.log("Error in Remove From Wishlist Service", error);
       }
     }

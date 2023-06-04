@@ -1,10 +1,38 @@
+import { useContext, useState } from "react";
+import { DataContext } from "../../Context/DataContext";
 import "./couponModel.css"
+
+
 export function CouponModel(){
+    const [coupon, setCoupon]= useState(false);
+    const {items:{cart}}= useContext(DataContext);
+
+    const {price , discount}= cart.reduce(
+        ({ price, discount }, item) => {
+          price += item.originalPrice * item.qty;
+          discount += (item.originalPrice - item.price) * item.qty;
+          return { price, discount };
+        },
+        {
+          price: 0,
+          discount: 0,
+        }
+        );
+
+        const couponDiscount=
+        coupon
+        ? Math.abs((parseFloat(price - discount) / 100) * 10)
+        : 0;
+      const totalAmt = parseFloat(price - discount -couponDiscount ).toFixed(2);
+      const totalDiscount = parseFloat(discount - couponDiscount).toFixed(2);
+
+      
+
     return (
         <div className="coupon-card">
             <div className="coupon-btn">
-                <p>Apply Coupon?</p>
-                <button>Apply</button>
+                <p>10% OFF Coupon?</p>
+                <button disabled={coupon} onClick={()=>setCoupon(true)}>{coupon ?"Applied":"Apply"}</button>
             </div>
             <div className="coupon-title">
         <p>Price Details</p>
@@ -12,11 +40,11 @@ export function CouponModel(){
         <div className="price-details">
           <li>
             <p>Price cart items</p>
-            <p>₹ 123</p>
+            <p>₹ {price}</p>
           </li>
           <li>
             <p>Discount</p>
-            <p>-₹ 123</p>
+            <p>-₹ {discount}</p>
           </li>
           <li>
             <p>Delivery Charges</p>
@@ -25,7 +53,7 @@ export function CouponModel(){
           <li>
             <p>Coupon Discount</p>
             <p>
-              1234
+            ₹ {couponDiscount}
             </p>
           </li>
         </div>
@@ -33,12 +61,12 @@ export function CouponModel(){
         <li>
             <p>Total Amount</p>
             <p>
-              1234
+            ₹ {totalAmt}
             </p>
           </li>
         </div>
         <div className="total-discount">
-            <p>You will save ₹ 300.00 on this order</p>
+            <p>You will save ₹ {totalDiscount} on this order</p>
         </div>
         <div className="checkout-btn">
         <button>Checkout</button>

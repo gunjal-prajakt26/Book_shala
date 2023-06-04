@@ -8,7 +8,10 @@ export function Cart(){
     const {items:{cart}}= useContext(DataContext);
     return (
         <div>
-            <h1>Cart Page</h1>
+            <h1>Cart Page {cart.length > 0
+            ?<span className="product-count">({cart.length} Products)</span>
+            :""
+            }</h1>
             {
             cart.length <= 0
             ?(<p className="emty-msg">Your Cart Is Empty ! ☹️</p>)
