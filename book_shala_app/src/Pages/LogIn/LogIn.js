@@ -1,10 +1,33 @@
+import { useContext, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { AuthContext } from "../../Context/AuthContext";
+import { DataContext } from "../../Context/DataContext";
 import "./LogIn.css";
 
 export function Login() {
   const navigate = useNavigate();
   const location = useLocation();
+  const {loginUser, token}= useContext(AuthContext);
+  const {setIsLoad}= useContext(DataContext);
+  const [form, setForm]= useState({email:"", password:""})
 
+  const loginHandler=()=>{
+    loginUser(form);
+  }
+
+  const testLoginHandler=()=>{
+    loginUser({email: "adarshbalika@gmail.com",
+    password: "adarshbalika"});
+   
+  }
+
+  if (token) {
+    setIsLoad(() => true);
+    setTimeout(() => {
+      navigate(location?.state?.from || "/products", { replace: true });
+      setIsLoad(false);
+    }, 500);
+  }
 
   return (
 
@@ -21,6 +44,7 @@ export function Login() {
               className="text-input"
               type="text"
               required
+              onChange={(e)=>setForm({...form, email:e.target.value})}
             />
           </div>
 
@@ -31,13 +55,16 @@ export function Login() {
               className="input-pwd"
               type="password"
               required
+              onChange={(e)=>setForm({...form, password:e.target.value})}
             />
           </div>
 
-          <div className="auth-primary-btn">
+          <div className="auth-primary-btn" onClick={()=>loginHandler()}>
+            <span className="login-btn">Login</span>
+          </div>
+          <div className="auth-primary-btn" onClick={()=>testLoginHandler()}>
             <span className="login-btn">Login with Test Credentials</span>
           </div>
-
           <Link className="auth-secondary-btn" to="/signUp">
               {"Create New Account >"}
           </Link>

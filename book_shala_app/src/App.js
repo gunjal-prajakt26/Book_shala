@@ -6,12 +6,13 @@ import {Home} from "./Components/Home";
 import { Products } from "./Pages/Product/Products";
 import { Cart } from "./Pages/Cart/Cart";
 import { WishList } from "./Pages/Wishlist/WishList";
-import { ProfilePage } from "./Pages/Product/ProfilePage";
+import { ProfilePage } from "./Pages/ProfilePage/ProfilePage";
 import { ProductDetails } from "./Pages/Product/ProductDetails";
 import { Login } from "./Pages/LogIn/LogIn";
 import { Signup } from "./Pages/LogIn/SignUp";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { PrivateRoute } from "./Components/PrivateRoute/PrivateRoute";
 
 function App() {
   return (
@@ -36,11 +37,11 @@ function App() {
           <Route path="/" element={<Home/>}/>
           <Route path="/products" element={<Products/>}/>
           <Route path="/product/:productId" element={<ProductDetails/>}/>
-          <Route path="/cart" element={<Cart/>}/>
-          <Route path="/wishList" element={<WishList/>}/>
           <Route path="/login" element={<Login />} />
           <Route path="/signUp" element={<Signup />} />
-          <Route path="/profilePage" element={<ProfilePage/>}/>
+          <Route path="/cart" element={<PrivateRoute><Cart/></PrivateRoute>}/>
+          <Route path="/wishList" element={<PrivateRoute><WishList /></PrivateRoute>}/>
+          <Route path="/profilePage" element={<PrivateRoute><ProfilePage/> </PrivateRoute>}/>
           <Route path="/mockman" element={<Mockman/>}/>
         </Routes>
         </div>

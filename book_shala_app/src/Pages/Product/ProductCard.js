@@ -2,11 +2,12 @@ import { useContext } from "react";
 import { DataContext } from "../../Context/DataContext";
 import { useNavigate } from "react-router";
 import "./ProductCard.css"
-import { toast } from "react-toastify";
+import { AuthContext } from "../../Context/AuthContext";
 
 export function ProductCard({ product }) {
 
   const {items:{cart, wishlist}, addToCart, addToWishlist, removeFromWishlist}= useContext(DataContext);
+  const {token}= useContext(AuthContext);
 
   const navigate= useNavigate();
     const {
@@ -24,16 +25,20 @@ export function ProductCard({ product }) {
   
     const isInCart=cart.find(({_id})=>_id == id);
     const addToCartHandler=()=>{
-      isInCart
-      ?navigate("/cart")
-      :addToCart(product);
+      token
+      ?isInCart
+        ?navigate("/cart")
+        :addToCart(product)
+      :navigate("/login");
     }
     
     const isInWishlist= wishlist.find(({_id})=>_id == id);
     const addToWishlistHandler=()=>{
-      isInWishlist
-      ?removeFromWishlist(id)
-      :addToWishlist(product);
+      token
+      ?isInWishlist
+        ?removeFromWishlist(id)
+        :addToWishlist(product)
+      :navigate("/login");
     }
     return (
       <div key={id} className="product-card">

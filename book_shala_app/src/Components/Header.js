@@ -24,7 +24,7 @@ export function Header() {
             <div className="app-features">
             <p><Link className="link" to="/cart"><i class="bi bi-cart-check-fill"></i></Link></p>
             <p><Link className="link" to="/wishList"><i class="bi bi-suit-heart-fill"></i></Link></p>
-            <p><Link className="link" to="/login"><i class="bi bi-person-circle"></i></Link></p>
+            <p><Link className="link" to="/profilePage"><i class="bi bi-person-circle"></i></Link></p>
             </div>
         </div>
     )
