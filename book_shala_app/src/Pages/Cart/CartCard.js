@@ -22,10 +22,14 @@ export function CartCard({product}){
       const discount=Math.floor(((originalPrice-price)/ originalPrice)*100);
       
       const isInWishlist= wishlist.find(({_id})=>_id == id);
+      const cartFunction=()=>{
+        addToWishlist(product);
+        removeFromCart(id);
+      }
       const clickHandler=()=>{
         isInWishlist
         ?navigate("/wishList")
-        :addToWishlist(product);
+        :cartFunction();
       }
 
       const minusClickHandler=()=>{

@@ -24,10 +24,14 @@ export function WishlistCard({product}){
       const discount=Math.floor(((originalPrice-price)/ originalPrice)*100);
     
       const isInCart=cart.find(({_id})=>_id == product?._id);
+      const wishlistFunction=()=>{
+        addToCart(product);
+        removeFromWishlist(product._id);
+      }
       const addToCartHandler=()=>{
         isInCart
         ?navigate("/cart")
-        :addToCart(product);
+        :wishlistFunction();
       }
       
       return (
@@ -55,7 +59,7 @@ export function WishlistCard({product}){
           </div>
           </div>
           <div className="wishlist-card-btns">
-            <button onClick={()=>removeFromWishlist(product._id)}>Remove</button><br/>
+            <button onClick={()=>removeFromWishlist(product._id)}>Remove</button>
             <button onClick={()=>addToCartHandler()}>{isInCart?"Go to Cart":"Move To Cart"}</button>
           </div>
           </div>

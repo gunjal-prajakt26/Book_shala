@@ -2,6 +2,8 @@ import { createContext, useContext, useState } from "react";
 import axios from "axios";
 import { DataContext } from "./DataContext";
 import { toast } from "react-toastify";
+import { v4 as uuid } from "uuid";
+
 
 export const  AuthContext= createContext();
 
@@ -12,9 +14,9 @@ export function AuthProvider({children}){
   const [token, setToken] = useState(localStorageToken?.token);
   const localStorageUser = JSON.parse(localStorage.getItem("user"));
   const [user, setUser] = useState(localStorageUser?.user);
-  const {setItem} = useContext(DataContext);
+  const {setItems} = useContext(DataContext);
 
-  const loginUser=async (creds)=>{
+  const loginUser=async (creds, address)=>{
     try {
       const {
         data: { foundUser, encodedToken },status
@@ -23,11 +25,11 @@ export function AuthProvider({children}){
         password: creds.password,
       });
       if (status === 200) {
-        localStorage.setItem("login", JSON.stringify({ token: encodedToken }));
+        localStorage.setItem("token", JSON.stringify({ token: encodedToken }));
         setToken(encodedToken);
         localStorage.setItem("user", JSON.stringify({ user: foundUser }));
         setUser(foundUser);
-        setItem({type: "INITIAL_ADDRESS", payLoad:foundUser.address});
+        setItems({type: "ADD_ADDRESS", payLoad:{address:{_id:uuid(),...address}}});
         toast.success("LogIn Successfully");
       }
         } catch (error) {
@@ -43,11 +45,11 @@ export function AuthProvider({children}){
         status,
       } = await axios.post("api/auth/signup",{creds});;
       if (status === 201) {
-        localStorage.setItem("signup", JSON.stringify({ token: encodedToken }));
+        localStorage.setItem("token", JSON.stringify({ token: encodedToken }));
         setToken(encodedToken);
         localStorage.setItem("user", JSON.stringify({ user: createdUser }));
         setUser(createdUser);
-        setItem({type: "INITIAL_ADDRESS", payLoad:createdUser.address});
+        setItems({type: "INITIAL_ADDRESS", payLoad:createdUser.address});
         toast.success("SignUp Successfully");
       }
     } catch (error) {
@@ -59,7 +61,7 @@ export function AuthProvider({children}){
     
     return(
         <>
-            <AuthContext.Provider value={{token, loginUser, signupUser, user}}>
+            <AuthContext.Provider value={{token, loginUser, signupUser, user, setToken, setUser}}>
                 {children}
             </AuthContext.Provider>
         </>

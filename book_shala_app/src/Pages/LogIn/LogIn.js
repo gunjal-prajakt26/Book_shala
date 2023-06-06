@@ -12,12 +12,20 @@ export function Login() {
   const [form, setForm]= useState({email:"", password:""})
 
   const loginHandler=()=>{
-    loginUser(form);
+    loginUser(form,{});
   }
 
+  const dummyAddress={name: "Admin",
+  street: "33 , MG Road",
+  city: "Pune",
+  state: "Maharashtra",
+  country: "India",
+  zipCode: "411046",
+  mobile: "12345678",
+}
   const testLoginHandler=()=>{
     loginUser({email: "adarshbalika@gmail.com",
-    password: "adarshbalika"});
+    password: "adarshbalika"}, dummyAddress);
    
   }
 

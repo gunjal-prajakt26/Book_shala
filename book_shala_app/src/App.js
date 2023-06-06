@@ -5,6 +5,7 @@ import {Routes, Route} from "react-router-dom";
 import {Home} from "./Components/Home";
 import { Products } from "./Pages/Product/Products";
 import { Cart } from "./Pages/Cart/Cart";
+import { Checkout } from "./Pages/Cart/Checkout/Checkout";
 import { WishList } from "./Pages/Wishlist/WishList";
 import { ProfilePage } from "./Pages/ProfilePage/ProfilePage";
 import { ProductDetails } from "./Pages/Product/ProductDetails";
@@ -13,6 +14,7 @@ import { Signup } from "./Pages/LogIn/SignUp";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { PrivateRoute } from "./Components/PrivateRoute/PrivateRoute";
+import { Order } from "./Pages/Orders/Order";
 
 function App() {
   return (
@@ -40,6 +42,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signUp" element={<Signup />} />
           <Route path="/cart" element={<PrivateRoute><Cart/></PrivateRoute>}/>
+          <Route path="/checkout" element={<PrivateRoute><Checkout/></PrivateRoute>}/>
+          <Route path="/order" element={<PrivateRoute><Order/></PrivateRoute>}/>
           <Route path="/wishList" element={<PrivateRoute><WishList /></PrivateRoute>}/>
           <Route path="/profilePage" element={<PrivateRoute><ProfilePage/> </PrivateRoute>}/>
           <Route path="/mockman" element={<Mockman/>}/>

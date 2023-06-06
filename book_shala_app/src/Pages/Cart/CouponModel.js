@@ -1,12 +1,14 @@
 import { useContext, useState } from "react";
 import { DataContext } from "../../Context/DataContext";
+import { useNavigate } from "react-router";
 import "./couponModel.css"
 
 
 export function CouponModel(){
-    const [coupon, setCoupon]= useState(false);
-    const {items:{cart}}= useContext(DataContext);
-
+  
+  const navigate= useNavigate();
+  const {items:{cart},coupon,setCoupon,couponValue, setCouponValue}= useContext(DataContext);
+  
     const {price , discount}= cart.reduce(
         ({ price, discount }, item) => {
           price += item.originalPrice * item.qty;
@@ -19,12 +21,13 @@ export function CouponModel(){
         }
         );
 
-        const couponDiscount=
-        coupon
-        ? Math.abs((parseFloat(price - discount) / 100) * 10)
-        : 0;
-      const totalAmt = parseFloat(price - discount -couponDiscount ).toFixed(2);
-      const totalDiscount = parseFloat(discount - couponDiscount).toFixed(2);
+        const applyHandler=()=>{
+          setCoupon(true);
+          setCouponValue(Math.floor((parseFloat(price - discount) / 100) * 10))
+        }
+      
+      const totalAmt = parseFloat(price - discount -couponValue ).toFixed(2);
+      const totalDiscount = parseFloat(discount - couponValue).toFixed(2);
 
       
 
@@ -32,14 +35,14 @@ export function CouponModel(){
         <div className="coupon-card">
             <div className="coupon-btn">
                 <p>10% OFF Coupon?</p>
-                <button disabled={coupon} onClick={()=>setCoupon(true)}>{coupon ?"Applied":"Apply"}</button>
+                <button disabled={coupon} onClick={()=>applyHandler()}>{coupon ?"Applied":"Apply"}</button>
             </div>
             <div className="coupon-title">
         <p>Price Details</p>
         </div>
         <div className="price-details">
           <li>
-            <p>Price cart items</p>
+            <p>Price ({cart.length} items)</p>
             <p>₹ {price}</p>
           </li>
           <li>
@@ -53,7 +56,7 @@ export function CouponModel(){
           <li>
             <p>Coupon Discount</p>
             <p>
-            ₹ {couponDiscount}
+            ₹ {couponValue}
             </p>
           </li>
         </div>
@@ -69,7 +72,7 @@ export function CouponModel(){
             <p>You will save ₹ {totalDiscount} on this order</p>
         </div>
         <div className="checkout-btn">
-        <button>Checkout</button>
+        <button onClick={()=>navigate("/checkout")}>Checkout</button>
         </div>
         </div>
     )

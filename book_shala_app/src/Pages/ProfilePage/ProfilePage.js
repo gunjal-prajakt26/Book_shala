@@ -3,12 +3,15 @@ import { Address } from "../../Components/Address/Address";
 import { AuthContext } from "../../Context/AuthContext";
 import { DataContext } from "../../Context/DataContext"
 import "./ProfilePage.css";
+import { useNavigate } from "react-router";
+
 
 export function ProfilePage(){
 
-    const {items:{address}, setItems}= useContext(DataContext);
-    const {user}= useContext(AuthContext);
-    const { firstName, lastName , email}= user
+    const {items:{address}, setItems, setIsLoad}= useContext(DataContext);
+    const {user, setToken, setUser}= useContext(AuthContext);
+    const { firstName, lastName , email}= user;
+    const navigate= useNavigate();
     const formValue = {
         name: "",
         street: "",
@@ -35,6 +38,23 @@ export function ProfilePage(){
           mobile,
         }));
       };
+
+      const logOutHandler = () => {
+        setItems({
+          type: "LOG_OUT",
+        });
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+    
+        setUser();
+        setToken("");
+        setIsLoad(true);
+        setTimeout(() => {
+          setIsLoad(false);
+        }, 500);
+        navigate("/");
+      };
+
     return (<>
         <div className="profile-conatiner">
         <div>
@@ -56,18 +76,20 @@ export function ProfilePage(){
                             <p>{zipCode}</p>
                             <p>{country}</p>
                             <p>Phone :{mobile}</p>
-                            <button onClick={() =>
+                            <button className="profile-btns" onClick={() =>
                           editAddress(_id, name, street, city, state, country, zipCode, mobile)
                         }>Edit</button>
-                            <button onClick={()=>setItems({type:"DELETE_ADDRESS", payLoad:_id})}>Delete</button>
+                            <button className="profile-btns" onClick={()=>setItems({type:"DELETE_ADDRESS", payLoad:_id})}>Delete</button>
                         </li>
                     ))
                 }
                 </div>
-                <button disabled={formDisplay} onClick={()=>{
+                <button className="profile-btns" disabled={formDisplay} onClick={()=>{
                     setFormDisplay(true);
                     setAddForm(formValue);
-                }}>Add Address</button>
+                }}>+ Address</button>
+                <br/>
+                <button className="logout-btn" onClick={()=>logOutHandler()}>Log Out</button>
             </div>
             </div>
             <div className="address-component">

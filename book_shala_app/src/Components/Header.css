@@ -36,3 +36,9 @@
     color: white;
     text-decoration: none;
 }
+.notification-icon {
+    font-size: 0.2rem;
+    padding: 0.4rem;
+    height: 1.2rem;
+    top: -5px;
+}

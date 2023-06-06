@@ -1,4 +1,4 @@
-import {createContext, useState, useEffect, useReducer} from "react";
+import {createContext, useState, useEffect, useReducer, useContext} from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
@@ -19,6 +19,12 @@ const DataReducerFun=(state,action)=>{
             return {
                 ...state,
                 cart: payLoad
+              }
+            break;
+        case "CLEAR_CART":
+            return {
+                ...state,
+                cart: []
               }
             break;
 
@@ -48,7 +54,7 @@ const DataReducerFun=(state,action)=>{
         case "INITIAL_ADDRESS":
             return {
                 ...state,
-                address:payLoad
+                address:[...state.address,payLoad.address]
               }
             break;
         case "ADD_ADDRESS":
@@ -79,6 +85,29 @@ const DataReducerFun=(state,action)=>{
           };
         }
               break;
+        
+        case "ORDER_ADDRESS":
+          return {
+            ...state,
+            orderAddress: { ...action.payload },
+          };
+          break;
+
+        case "ADD_ORDER":
+          return {
+            ...state,
+            order: { ...action.payload },
+          };
+        
+          case "LOG_OUT":
+            return {
+              ...state,
+              cart: [],
+              wishlist: [],
+              address: [],
+            };
+            break;
+
             default:
               return state;
               break;
@@ -86,144 +115,163 @@ const DataReducerFun=(state,action)=>{
           }
             
             
-            export function DataProvider({children}){
+export function DataProvider({children}){
 
-              const [isLoad, setIsLoad]= useState(true);
-              const [isError, setIsError]= useState(false);
-              const token= localStorage.getItem("encodedToken");
-              const initialData = {productData:[],categories:[], cart:[], wishlist:[], address:[]}; 
-              
-              const [items, setItems] = useReducer(DataReducerFun, initialData);
-              
-              const addToCart= async ( product)=>{
-                try {
-                  const {
-            data: { cart },
-          } = await axios.post(
-            "/api/user/cart",
-            {
-              product,
-            },
-            {
-              headers: {
-                authorization: token,
-              },
-            }
-            );
-            setItems({type:"ADD_TO_CART", payLoad:cart});
-            toast.success("Added In Cart !");
-          }catch (error) {
-            toast.error("Something Went Wrong !");
-            console.log("Error in addToCart service", error);
-          }
-        }
+        const [isLoad, setIsLoad]= useState(true);
+        const [isError, setIsError]= useState(false);
+        const [coupon, setCoupon]= useState(false);
+        const [couponValue, setCouponValue]= useState(0);
+        const token= localStorage.getItem("token");
+        const initialData = {productData:[],categories:[], cart:[], wishlist:[], address:[],orderAddress:{}, order:[]}; 
         
-        const removeFromCart= async (id)=>{
+        const [items, setItems] = useReducer(DataReducerFun, initialData);
+        
+        const addToCart= async (product)=>{
           try {
             const {
-              data: { cart },
-            } = await axios.delete(`api/user/cart/${id}`, {
-              headers: {
-                authorization: token,
-              },
-            }); 
-            setItems({type:"REMOVE_FROM_CART", payLoad:cart})    
-            toast.error("Removed From Cart !");
-          } catch (error) {
-            toast.error("Something Went Wrong !");
-            console.log("Error in service", error);
-          }
+      data: { cart },
+    } = await axios.post(
+      "/api/user/cart",
+      {
+        product,
+      },
+      {
+        headers: {
+          authorization: token,
+        },
+      }
+      );
+      setItems({type:"ADD_TO_CART", payLoad:cart});
+      toast.success("Added In Cart !");
+    }catch (error) {
+      toast.error("Something Went Wrong !");
+      console.log("Error in addToCart service", error);
+    }
+  }
+  
+  const removeFromCart= async (id)=>{
+    try {
+      const {
+        data: { cart },
+      } = await axios.delete(`api/user/cart/${id}`, {
+        headers: {
+          authorization: token,
+        },
+      }); 
+      setItems({type:"REMOVE_FROM_CART", payLoad:cart})    
+      toast.error("Removed From Cart !");
+    } catch (error) {
+      toast.error("Something Went Wrong !");
+      console.log("Error in service", error);
+    }
+  }
+  
+const updateQuantityofCart=async (id,actionType)=>{
+try {
+  const {
+    data: { cart },
+  } = await axios.post(
+    `api/user/cart/${id}`,
+    {
+      action: {
+        type: actionType === "INC_QTY" ? "increment" : "decrement",
+          },
+        },
+        {
+          headers: {
+            authorization: token,
+          },
         }
+        );
         
-    const updateQuantityofCart=async (id,actionType)=>{
-      try {
-        const {
-          data: { cart },
-        } = await axios.post(
-          `api/user/cart/${id}`,
-          {
-            action: {
-              type: actionType === "INC_QTY" ? "increment" : "decrement",
-                },
-              },
-              {
-                headers: {
-                  authorization: token,
-                },
-              }
-              );
-              
-              setItems({type:"UPDATE_CART_QUANTITY", payLoad:cart})
-            } catch (error) {
-              console.log("Error in updateQtyFromCart service", error);
-            }
-          }
-          
-          const addToWishlist= async ( product)=>{
-            try {
-              const {
-                data: { wishlist },
-            } = await axios.post(
-              "/api/user/wishlist",
-              {
-                product,
-              },
-              {
-                headers: {
-                  authorization: token,
-                },
-              }
-              );
-              setItems({type:"ADD_TO_WHISHLIST", payLoad:wishlist});
-              toast.success("Added In Wishlist !");
-            } catch (error) {
-              toast.error("Something Went Wrong !");
-              console.log("Error in Add To Wishlist Service", error);
-            }
-          }
-          
-          const removeFromWishlist= async (id)=>{
-            try {
-              const {
-                data: { wishlist },
-              } = await axios.delete(`api/user/wishlist/${id}`, {
-                headers: {
-                  authorization: token,
-                },
-              })
-              setItems({type:"REMOVE_FROM_WHISHLIST", payLoad:wishlist})
-        toast.error("Removed From Wishlist  !");
+        setItems({type:"UPDATE_CART_QUANTITY", payLoad:cart})
       } catch (error) {
-        toast.error("Something Went Wrong !");
-        console.log("Error in Remove From Wishlist Service", error);
+        console.log("Error in updateQtyFromCart service", error);
       }
     }
     
-    useEffect(() => {
-        (async () => {
-          try {
-            const dataResponse= await fetch("/api/products");
-            const list=await dataResponse.json();
-            setItems({type:"SET_PRODUCT_DATA", payLoad:list.products})
-            
-            const categoryResponse= await fetch("/api/categories", {method:"GET"});
-            const catgoryList = await categoryResponse.json();
-            setItems({type:"SET_CATEGORIES_DATA", payLoad:catgoryList.categories})
-            
-            setIsLoad(false);
-            
-          } catch (error) {
-            setIsLoad(false);
-            console.error(error)
-            setIsError(true);
-          }
-          })();
-        }, [])
-        
+const clearCart=async (cart)=> {
+      try {
+        for (const item of cart) {
+          await axios.delete(`api/user/cart/${item._id}`, {
+            headers: {
+              authorization: token,
+            },
+          });
+        }
+        setItems({
+          type: "CLEAR_CART",
+        });
+      } catch (error) {
+        console.log("Error in clear cart service", error);
+      }
+    }
+    
+    const addToWishlist= async ( product)=>{
+      try {
+        const {
+          data: { wishlist },
+      } = await axios.post(
+        "/api/user/wishlist",
+        {
+          product,
+        },
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+        );
+        setItems({type:"ADD_TO_WHISHLIST", payLoad:wishlist});
+        toast.success("Added In Wishlist !");
+      } catch (error) {
+        toast.error("Something Went Wrong !");
+        console.log("Error in Add To Wishlist Service", error);
+      }
+    }
+    
+    const removeFromWishlist= async (id)=>{
+      try {
+        const {
+          data: { wishlist },
+        } = await axios.delete(`api/user/wishlist/${id}`, {
+          headers: {
+            authorization: token,
+          },
+        })
+        setItems({type:"REMOVE_FROM_WHISHLIST", payLoad:wishlist})
+  toast.error("Removed From Wishlist  !");
+} catch (error) {
+  toast.error("Something Went Wrong !");
+  console.log("Error in Remove From Wishlist Service", error);
+}
+}
+
+useEffect(() => {
+  (async () => {
+    try {
+      const dataResponse= await fetch("/api/products");
+      const list=await dataResponse.json();
+      setItems({type:"SET_PRODUCT_DATA", payLoad:list.products})
+      
+      const categoryResponse= await fetch("/api/categories", {method:"GET"});
+      const catgoryList = await categoryResponse.json();
+      setItems({type:"SET_CATEGORIES_DATA", payLoad:catgoryList.categories})
+      
+      setIsLoad(false);
+      
+    } catch (error) {
+      setIsLoad(false);
+      console.error(error)
+      setIsError(true);
+    }
+    })();
+  }, [])
+  
         
     return (
         <>
-            <DataContext.Provider value={{items, setItems,setIsLoad,setIsError, isError, isLoad, addToCart, addToWishlist, removeFromCart, removeFromWishlist, updateQuantityofCart}}>
+            <DataContext.Provider value={{items, setItems,setIsLoad,setIsError, isError, isLoad, addToCart, addToWishlist, removeFromCart,clearCart, removeFromWishlist, updateQuantityofCart,coupon,setCoupon,couponValue, setCouponValue}}>
                 {children}
             </DataContext.Provider>
         </>
