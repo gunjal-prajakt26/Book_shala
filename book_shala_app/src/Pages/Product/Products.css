@@ -27,8 +27,9 @@
     margin: auto 5px;
     border-radius: 5px;
     padding: 3px 10px;
-    background-color: #475569;
+    background-color: #0369a1;
     color: white;
+    font-weight: bold;
 }
 
 .price-slider{

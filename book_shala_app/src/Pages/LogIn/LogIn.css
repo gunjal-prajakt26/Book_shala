@@ -61,7 +61,7 @@
     display: block;
     padding: 7px;
     font-weight: bold;
-    background-color: #475569;
+    background-color: #0369a1;
     color: white;
 
 }
@@ -87,7 +87,7 @@
 
 .auth-primary-btn {
     cursor: pointer;
-    background-color: var(--link);
+    background-color: #0369a1;
     color: var(--white);
     padding: 0.5rem 0;
 }

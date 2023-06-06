@@ -45,8 +45,8 @@ export function Address({
             <input placeholder="Enter Mobile Number" value={addressForm.mobile} type="text" required onChange={(e)=>setAddForm((prev) => ({ ...prev, mobile: e.target.value }))}/>
 
             <div className="address-page-btns">
-            <button onClick={()=>saveOnClick()}>Save</button>
-            <button onClick={()=>cancelForm()}>Cancel</button>
+            <button className="profile-btns" onClick={()=>saveOnClick()}>Save</button>
+            <button className="profile-btns" onClick={()=>cancelForm()}>Cancel</button>
             </div>
         </div>
     )
